@@ -1,0 +1,51 @@
+---
+# ASTERISK INSTALLATION PLAYBOOK
+# This should be run after the USER playbook
+
+######### Pre-game
+
+# Install required libraries
+- name: install pre-installation libraries
+  apt: pkg=$item state=latest force=yes
+  with_items: $pre_install_libraries
+  tags: setup
+  
+# Install linux-headers.
+- name: install linux headers
+  shell: apt-get install -y linux-headers-$(uname -r)
+  tags: setup
+  
+# Create a source directory
+- name: create source directory
+  file: path=$dir_asterisk_source state=directory force=yes
+  tags: setup
+
+######### Showtime!
+
+- include: dahdi.yml
+- include: libpri.yml
+- include: asterisk.yml
+  
+######## Post-game party.
+
+# Cleanup the source directory
+- name: remove source files
+  file: path=$dir_asterisk_source state=absent recurse=yes force=yes
+  ignore_errors: yes
+  notify:
+    - change $home directory permissions
+  tags: cleanup
+  
+# Cleanup build packages
+- name: remove build tools
+  apt: pkg=$item state=absent purge=yes
+  ignore_errors: yes
+  notify:
+    - remove zip
+    - remove unzip
+  tags: cleanup
+  
+# Startup Asterisk
+- name: start asterisk
+  service: name=asterisk state=started
+  tags: cleanup

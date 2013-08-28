@@ -1,0 +1,31 @@
+---
+# GLOBAL VARIABLES FOR ASTERISK INSTALLATION
+
+# Directories of untarred downloads
+dir_asterisk: asterisk-11.5.0
+dir_dahdi: dahdi-linux-complete-2.7.0.1+2.7.0.1
+dir_libpri: libpri-1.4.14
+
+# source directory name
+dir_asterisk_source: /tmp/src
+
+# Libraries required before building
+pre_install_libraries:
+  - build-essential
+  - subversion
+  - libssl-dev
+  - libncurses5-dev
+  - libnewt-dev
+  - libxml2-dev
+  - libsqlite3-dev
+  - libpq-dev
+
+# Filenames of downloaded software
+tar_asterisk: asterisk-11-current.tar.gz
+tar_dahdi: dahdi-linux-complete-current.tar.gz
+tar_libpri: libpri-1.4-current.tar.gz
+
+# URLs for downloading required software
+url_asterisk: http://downloads.digium.com/pub/telephony/asterisk/$tar_asterisk
+url_dahdi: http://downloads.digium.com/pub/telephony/dahdi-linux-complete/$tar_dahdi
+url_libpri: http://downloads.asterisk.org/pub/telephony/libpri/$tar_libpri

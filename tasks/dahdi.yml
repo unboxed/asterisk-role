@@ -1,0 +1,27 @@
+---
+# DAHDI-SPECIFIC BUILD FILE
+
+# Fetch the dahdi drivers
+- name: get dahdi source code
+  get_url: url=$url_dahdi dest=$dir_asterisk_source
+  tags: dahdi
+  
+# Unzip dahdi drivers
+- name: unzip dahdi source
+  command: /bin/tar xf $dir_asterisk_source/$tar_dahdi -C $dir_asterisk_source
+  tags: dahdi
+  
+# Build dahdi drivers
+- name: build dahdi drivers
+  command: make $dir_asterisk_source/$dir_dahdi/
+  tags: dahdi
+  
+# Install dahdi drivers
+- name: build install drivers
+  command: make install chdir=$dir_asterisk_source/$dir_dahdi
+  tags: dahdi
+  
+# Configure dahdi drivers
+- name: configure drivers
+  command: make config chdir=$dir_asterisk_source/$dir_dahdi
+  tags: dahdi
