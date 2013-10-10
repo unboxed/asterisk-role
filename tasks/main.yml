@@ -8,23 +8,24 @@
 - name: install pre-installation libraries
   apt: pkg=$item state=latest force=yes
   with_items: $pre_install_libraries
-  tags: setup
+  tags: asterisk
   
 # Install linux-headers.
 - name: install linux headers
   shell: apt-get install -y linux-headers-$(uname -r)
-  tags: setup
+  tags: asterisk
   
 # Create a source directory
 - name: create source directory
   file: path=$dir_asterisk_source state=directory force=yes
-  tags: setup
+  tags: asterisk
 
 ######### Showtime!
 
 - include: dahdi.yml
 - include: libpri.yml
 - include: asterisk.yml
+- include: asterisk_permission.yml
   
 ######## Post-game party.
 
@@ -34,7 +35,7 @@
   ignore_errors: yes
   notify:
     - change $home directory permissions
-  tags: cleanup
+  tags: asterisk
   
 # Cleanup build packages
 - name: remove build tools
@@ -43,9 +44,4 @@
   notify:
     - remove zip
     - remove unzip
-  tags: cleanup
-  
-# Startup Asterisk
-- name: start asterisk
-  service: name=asterisk state=started
-  tags: cleanup
+  tags: asterisk

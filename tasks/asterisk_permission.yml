@@ -1,0 +1,36 @@
+---
+## Playbook to configure the Asterisk service to run as asterisk user.
+# This playbook must be run after the asterisk.yml playbook.
+
+# Edit the asterisk configuration
+- name: change asterisk user
+  command: /bin/sed -i "s/^{{ item.original }}.*$/{{ item.replacement }}/" {{ item.file }}
+  with_items:
+    - { original: ';runuser', replacement: 'runuser = $uname', file: '$home/$dir_asterisk/asterisk/asterisk.conf' }
+    - { original: ';rungroup', replacement: 'rungroup = $uname', file: '$home/$dir_asterisk/asterisk/asterisk.conf' }
+    - { original: '[directories](!)', replacement: '[directories]', file: '$home/$dir_asterisk/asterisk/asterisk.conf' }
+  tags: asterisk
+
+# Change ownership of Asterisk files
+- name: change asterisk library permissions
+  file: path=$item owner=$uname group=$uname force=yes recurse=yes state=directory
+  with_items:
+    - /usr/lib/asterisk
+    - /usr/include/asterisk
+    - /dev/dahdi
+  ignore_errors: yes
+  tags: asterisk
+
+# Change ownership of Asterisk binaries
+- name: change asterisk binary permissions
+  file: path=$item owner=$uname group=$uname force=yes
+  with_items:
+    - /usr/sbin/asterisk
+    - /usr/include/asterisk.h
+    - /usr/share/man/man8/asterisk.8
+  tags: asterisk
+  
+# Change ownership of Asterisk configuration files
+- name: change asterisk configuration permissions
+  file: path=$home/$dir_asterisk owner=$uname group=$uname state=directory recurse=yes force=yes
+  tags: asterisk

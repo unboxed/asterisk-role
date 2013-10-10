@@ -2,7 +2,7 @@
 # GLOBAL VARIABLES FOR ASTERISK INSTALLATION
 
 # Directories of untarred downloads
-dir_asterisk: asterisk-11.5.0
+dir_asterisk: asterisk-11.5.1
 dir_dahdi: dahdi-linux-complete-2.7.0.1+2.7.0.1
 dir_libpri: libpri-1.4.14
 
@@ -21,7 +21,7 @@ pre_install_libraries:
   - libpq-dev
 
 # Filenames of downloaded software
-tar_asterisk: asterisk-11-current.tar.gz
+tar_asterisk: asterisk-11.5.1.tar.gz
 tar_dahdi: dahdi-linux-complete-current.tar.gz
 tar_libpri: libpri-1.4-current.tar.gz
 

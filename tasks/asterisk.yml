@@ -3,7 +3,7 @@
 
 # Fetch Asterisk source
 - name: fetch asterisk
-  get_url: url=$url_asterisk dest=$dir_asterisk_source force=yes
+  get_url: url=$url_asterisk dest=$dir_asterisk_source/$tar_asterisk
   tags: asterisk
   
 # Unzip the Asterisk source
@@ -18,7 +18,7 @@
   
 # Configure asterisk
 - name: configure asterisk
-  command: ./configure chdir=$dir_asterisk_source/$dir_asterisk/
+  command: ./configure chdir=$dir_asterisk_source/$dir_asterisk/ --sysconfdir=$home/$dir_asterisk --localstatedir=$home/$dir_asterisk
   tags: asterisk
   
 # Configure menu select
@@ -39,6 +39,11 @@
 # Install asterisk
 - name: install asterisk
   command: make install chdir=$dir_asterisk_source/$dir_asterisk/
+  tags: asterisk
+  
+# Make the sample configuration files
+- name: create asterisk configuration files
+  command: make samples chdir=$dir_asterisk_source/$dir_asterisk
   tags: asterisk
   
 # Configure Asterisk
