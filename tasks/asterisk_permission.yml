@@ -34,3 +34,8 @@
 - name: change asterisk configuration permissions
   file: path=$home/$dir_asterisk owner=$uname group=$uname state=directory recurse=yes force=yes
   tags: asterisk
+  
+# Change ownership of dahdi libraries
+- name: change dahdi permissions
+  file: path=/dev/dahdi owner=$uname group=$uname state=directory recurse=yes force=yes
+  tags: asterisk
