@@ -18,7 +18,6 @@
     - /usr/lib/asterisk
     - /usr/include/asterisk
     - /dev/dahdi
-  ignore_errors: yes
   tags: asterisk
 
 # Change ownership of Asterisk binaries
@@ -33,9 +32,4 @@
 # Change ownership of Asterisk configuration files
 - name: change asterisk configuration permissions
   file: path=$home/$dir_asterisk owner=$uname group=$uname state=directory recurse=yes force=yes
-  tags: asterisk
-  
-# Change ownership of dahdi libraries
-- name: change dahdi permissions
-  file: path=/dev/dahdi owner=$uname group=$uname state=directory recurse=yes force=yes
   tags: asterisk
