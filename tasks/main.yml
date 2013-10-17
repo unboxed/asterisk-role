@@ -23,16 +23,16 @@
 - include: asterisk_permission.yml
   
 ######## Post-game party.
-
-# Cleanup the source directory
-- name: remove source files
-  file: path=$dir_asterisk_source state=absent recurse=yes force=yes
-  ignore_errors: yes
-  tags: build
   
 # Cleanup build packages
 - name: remove build tools
   apt: pkg=$item state=absent purge=yes
   with_items: $libraries_build
+  ignore_errors: yes
+  tags: build
+
+# Cleanup the source directory
+- name: remove source files
+  file: path=$dir_asterisk_source state=absent force=no
   ignore_errors: yes
   tags: build
