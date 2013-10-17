@@ -3,7 +3,7 @@
 
 # Fetch the dahdi drivers
 - name: get dahdi source code
-  get_url: url=$url_dahdi dest=$dir_asterisk_source
+  get_url: url=$url_dahdi dest=$dir_asterisk_source/$tar_dahdi
   tags: dahdi
   
 # Unzip dahdi drivers
@@ -13,15 +13,27 @@
   
 # Build dahdi drivers
 - name: build dahdi drivers
-  command: make $dir_asterisk_source/$dir_dahdi/
+  command: /usr/bin/make chdir=$dir_asterisk_source/$dir_dahdi
   tags: dahdi
   
 # Install dahdi drivers
 - name: build install drivers
-  command: make install chdir=$dir_asterisk_source/$dir_dahdi
+  command: /usr/bin/make install chdir=$dir_asterisk_source/$dir_dahdi
   tags: dahdi
   
 # Configure dahdi drivers
 - name: configure drivers
-  command: make config chdir=$dir_asterisk_source/$dir_dahdi
+  command: /usr/bin/make config chdir=$dir_asterisk_source/$dir_dahdi
+  tags: dahdi
+  
+# Correct the dahdi user
+- name: assign dahdi to $uname
+  command: /bin/sed -i "s/{{ item.original }}/{{ item.replacement }}/g" /etc/udev/rules.d/dahdi.rules
+  with_items:
+    - { original: \"asterisk\", replacement: \"$uname\" }
+  tags: dahdi
+  
+# Load dahdi hardware
+- name: load dahdi
+  service: name=dahdi state=started
   tags: dahdi

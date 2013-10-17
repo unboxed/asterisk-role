@@ -9,6 +9,8 @@
     - { original: ';runuser', replacement: 'runuser = $uname', file: '$home/$dir_asterisk/asterisk/asterisk.conf' }
     - { original: ';rungroup', replacement: 'rungroup = $uname', file: '$home/$dir_asterisk/asterisk/asterisk.conf' }
     - { original: '[directories](!)', replacement: '[directories]', file: '$home/$dir_asterisk/asterisk/asterisk.conf' }
+  notify:
+    - change $home directory permissions
   tags: asterisk
 
 # Change ownership of Asterisk files

@@ -1,5 +1,16 @@
 ---
 # ASTERISK-SPECIFIC BUILD TASKS
+  
+# Install linux-headers.
+- name: install linux headers
+  shell: apt-get install -y linux-headers-$(uname -r)
+  tags: asterisk
+  
+# Install required libraries
+- name: install pre-installation libraries
+  apt: pkg=$item state=latest force=yes
+  with_items: $libraries_pre_installed
+  tags: asterisk
 
 # Fetch Asterisk source
 - name: fetch asterisk
