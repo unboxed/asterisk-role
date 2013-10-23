@@ -29,10 +29,10 @@
   apt: pkg=$item state=absent purge=yes
   with_items: $libraries_build
   ignore_errors: yes
-  tags: build
+  tags: clean
 
 # Cleanup the source directory
 - name: remove source files
   file: path=$dir_asterisk_source state=absent force=no
   ignore_errors: yes
-  tags: build
+  tags: clean
