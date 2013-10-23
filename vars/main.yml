@@ -22,7 +22,7 @@ libraries_pre_installed:
   - libxml2-dev
   - libsqlite3-dev
   - libpq-dev
-  - libuuid
+  - uuid
 
 # Filenames of downloaded software
 tar_asterisk: asterisk-11.5.1.tar.gz
