@@ -29,7 +29,7 @@
   
 # Configure asterisk
 - name: configure asterisk
-  command: ./configure chdir=$dir_asterisk_source/$dir_asterisk/ --sysconfdir=$home/$dir_asterisk --localstatedir=$home/$dir_asterisk
+  command: ./configure chdir=$dir_asterisk_source/$dir_asterisk/ --sysconfdir=$home/$dir_asterisk
   tags: asterisk
   
 # Configure menu select

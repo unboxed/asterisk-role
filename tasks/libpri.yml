@@ -1,22 +1,6 @@
 ---
 # LIBPRI-SPECIFIC BUILD TASKS
 
-# Fetch libpri libraries
-- name: fetch libpri
-  get_url: url=$url_libpri dest=$dir_asterisk_source
-  tags: libpri
-  
-# Unzip the libpri library
-- name: unzip libpri library
-  command: /bin/tar xf $dir_asterisk_source/$tar_libpri -C $dir_asterisk_source/
-  tags: libpri
-  
-# Build libpri
-- name: build libpri library
-  command: make $dir_asterisk_source/$dir_libpri
-  tags: libpri
-  
-# Install libpri
-- name: install libpri library
-  command: make install chdir=$dir_asterisk_source/$dir_libpri
+- name: install libpri
+  install: url=$url_libpri dest=$dir_asterisk_source
   tags: libpri

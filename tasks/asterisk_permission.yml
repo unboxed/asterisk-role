@@ -2,29 +2,50 @@
 ## Playbook to configure the Asterisk service to run as asterisk user.
 # This playbook must be run after the asterisk.yml playbook.
 
-# Edit the asterisk configuration
-- name: change asterisk user
-  command: /bin/sed -i "s/^{{ item.original }}.*$/{{ item.replacement }}/" {{ item.file }}
-  with_items:
-    - { original: ';runuser', replacement: 'runuser = $uname', file: '$home/$dir_asterisk/asterisk/asterisk.conf' }
-    - { original: ';rungroup', replacement: 'rungroup = $uname', file: '$home/$dir_asterisk/asterisk/asterisk.conf' }
-    - { original: '[directories](!)', replacement: '[directories]', file: '$home/$dir_asterisk/asterisk/asterisk.conf' }
-  notify:
-    - change $home directory permissions
+- name: create $user_asterisk group
+  group: name=$user_asterisk
   tags: asterisk
+
+# Create the asterisk user
+- name: create $user_asterisk user
+  user: name=$user_asterisk createhome=no group=$user_asterisk
+  tags: asterisk
+  
+# Add asterisk user to admin group
+- name: edit $user_asterisk group
+  user: name=$user_asterisk groups=$uname force=yes
+  tags: asterisk
+
+# Edit the asterisk configuration
+- name: change asterisk process permissions
+  lineinfile: dest='$home/$dir_asterisk/asterisk/asterisk.conf' regexp='^{{ item.original }}' line='{{ item.replacement }}'
+  with_items:
+    - { original: ';runuser', replacement: 'runuser = $user_asterisk' }
+    - { original: ';rungroup', replacement: 'rungroup = $uname' }
+    - { original: '[directories](!)', replacement: '[directories]' }
+    - { original: 'astlogdir', replacement: 'astlogdir => \/home\/admin\/asterisk-11.6.0\/log' }
+    - { original: ';[files]', replacement: '[files]' }
+    - { original: ';astctlpermissions', replacement: 'astctlpermissions = 0670' }
+    - { original: ';astctlowner', replacement: 'astctlowner = $user_asterisk' }
+    - { original: ';astctlgroup', replacement: 'astctlgroup = $uname' }
+  notify:
+    - restart asterisk
+  tags: asterisk_do
 
 # Change ownership of Asterisk files
 - name: change asterisk library permissions
-  file: path=$item owner=$uname group=$uname force=yes recurse=yes state=directory
+  file: path=$item owner=$user_asterisk group=$user_asterisk force=yes recurse=yes state=directory
   with_items:
     - /usr/lib/asterisk
     - /usr/include/asterisk
     - /dev/dahdi
+    - /var/lib/asterisk
+    - /var/spool/asterisk
   tags: asterisk
 
 # Change ownership of Asterisk binaries
 - name: change asterisk binary permissions
-  file: path=$item owner=$uname group=$uname force=yes
+  file: path=$item owner=$user_asterisk group=$user_asterisk force=yes
   with_items:
     - /usr/sbin/asterisk
     - /usr/include/asterisk.h
@@ -33,5 +54,7 @@
   
 # Change ownership of Asterisk configuration files
 - name: change asterisk configuration permissions
-  file: path=$home/$dir_asterisk owner=$uname group=$uname state=directory recurse=yes force=yes
+  file: path=$home/$dir_asterisk owner=$user_asterisk group=$uname state=directory recurse=yes force=yes mode=2775
+  notify:
+    - restart asterisk
   tags: asterisk

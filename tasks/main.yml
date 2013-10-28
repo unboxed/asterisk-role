@@ -21,6 +21,7 @@
 - include: libpri.yml
 - include: asterisk.yml
 - include: asterisk_permission.yml
+- include: dahdi_configuration.yml
   
 ######## Post-game party.
   
