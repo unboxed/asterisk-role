@@ -8,56 +8,56 @@
   
 # Install required libraries
 - name: install pre-installation libraries
-  apt: pkg=$item state=latest force=yes
-  with_items: $libraries_pre_installed
+  apt: pkg='{{ item }}' state=latest force=yes
+  with_items: '{{ libraries_pre_installed }}'
   tags: asterisk
 
 # Fetch Asterisk source
 - name: fetch asterisk
-  get_url: url=$url_asterisk dest=$dir_asterisk_source/$tar_asterisk
+  get_url: url='{{ url_asterisk }}' dest='{{ dir_asterisk_source }}/{{ tar_asterisk }}'
   tags: asterisk
   
 # Unzip the Asterisk source
 - name: unzip asterisk
-  command: /bin/tar xf $dir_asterisk_source/$tar_asterisk -C $dir_asterisk_source
+  command: /bin/tar xf '{{ dir_asterisk_source }}/{{ tar_asterisk }}' -C '{{ dir_asterisk_source }}'
   tags: asterisk
   
 # Fetch mp3 source
 - name: fetch mp3 source
-  command: $dir_asterisk_source/$dir_asterisk/contrib/scripts/get_mp3_source.sh chdir=$dir_asterisk_source/$dir_asterisk/
+  command: contrib/scripts/get_mp3_source.sh chdir='{{ dir_asterisk_source }}/{{ dir_asterisk }}'
   tags: asterisk
   
 # Configure asterisk
 - name: configure asterisk
-  command: ./configure chdir=$dir_asterisk_source/$dir_asterisk/ --sysconfdir=$home/$dir_asterisk
+  command: ./configure chdir='{{ dir_asterisk_source }}/{{ dir_asterisk }}' --sysconfdir='{{ global_config_dir|default('/etc') }}'
   tags: asterisk
   
 # Configure menu select
 - name: configure menu select
-  command: make menuselect.makeopts chdir=$dir_asterisk_source/$dir_asterisk
+  command: make menuselect.makeopts chdir='{{ dir_asterisk_source }}/{{ dir_asterisk }}'
   tags: asterisk
   
 # Enable desired modules
 - name: enable menu select modules
-  command: menuselect/menuselect chdir=$dir_asterisk_source/$dir_asterisk/ --enable format_mp3 --enable app_meetme --enable cdr_pgsql menuselect.makeopts
+  command: menuselect/menuselect chdir='{{ dir_asterisk_source}}/{{ dir_asterisk }}' --enable format_mp3 --enable app_meetme --enable cdr_pgsql menuselect.makeopts
   tags: asterisk
 
 # Make Asterisk
 - name: compile asterisk
-  command: make chdir=$dir_asterisk_source/$dir_asterisk/
+  command: make chdir='{{ dir_asterisk_source }}/{{ dir_asterisk }}'
   tags: asterisk
   
 # Install asterisk
 - name: install asterisk
-  command: make install chdir=$dir_asterisk_source/$dir_asterisk/
+  command: make install chdir='{{ dir_asterisk_source }}/{{ dir_asterisk }}'
   tags: asterisk
   
 # Make the sample configuration files
 - name: create asterisk configuration files
-  command: make samples chdir=$dir_asterisk_source/$dir_asterisk
+  command: make samples chdir='{{ dir_asterisk_source }}/{{ dir_asterisk }}'
   tags: asterisk
   
 # Configure Asterisk
 - name: configure asterisk
-  command: make config chdir=$dir_asterisk_source/$dir_asterisk/
+  command: make config chdir='{{ dir_asterisk_source }}/{{ dir_asterisk }}'
   tags: asterisk

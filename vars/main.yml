@@ -9,9 +9,16 @@ dir_libpri: libpri-1.4.14/
 # source directory name
 dir_asterisk_source: /tmp/src
 
+# asterisk configuration files directory
+dir_asterisk_config: "{{ global_config_dir|default('/etc') }}/asterisk"
+dir_asterisk_log: "{{ global_log_dir|default('/var/log/') }}/asterisk"
+
 # Dahdi configuration files
-file_dahdi_channel: $home/$dir_asterisk/asterisk/chan_dahdi.conf
+file_dahdi_channel: '{{ dir_asterisk_config }}/chan_dahdi.conf'
 file_dahdi_config: /etc/dahdi/system.conf
+
+# Group to assign ownership of config and log files to
+group_asterisk: "{{ global_asterisk_group|default('asterisk') }}"
 
 # Libraries containing build tools
 libraries_build:
@@ -39,5 +46,5 @@ url_asterisk: http://downloads.digium.com/pub/telephony/asterisk/releases/$tar_a
 url_dahdi: http://downloads.digium.com/pub/telephony/dahdi-linux-complete/$tar_dahdi
 url_libpri: http://downloads.asterisk.org/pub/telephony/libpri/$tar_libpri
 
-# user and group name for the asterisk user
+# User name for the asterisk user
 user_asterisk: asterisk

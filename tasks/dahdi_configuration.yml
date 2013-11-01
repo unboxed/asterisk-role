@@ -4,31 +4,31 @@
 
 # Assign Australia as the default zone
 - name: update dahdi zone data
-  lineinfile: dest=$file_dahdi_config regexp='^{{ item.original }}' line='{{ item.replacement }}'
+  lineinfile: dest='{{ file_dahdi_config }}' regexp='^{{ item.original }}' line='{{ item.replacement }}'
   with_items:
     - { original: 'loadzone', replacement: 'loadzone=au' }
     - { original: 'defaultzone', replacement: 'defaultzone=au' }
-  tags: dahdi
+  tags: dahdi_config
 # Configure the ports for the Dahdi cards
 - name: update dahdi port configuration
-  shell: "echo $item >> $file_dahdi_config"
+  shell: "echo {{ item }} >> {{ file_dahdi_config }}"
   with_items:
     - fxsks=1,2
     - fxoks=3,4
     - echocanceller=mg2,1-4
-  tags: dahdi
+  tags: dahdi_config
 # Edit the Dahdi configuration within Asterisk
 - name: update asterisk dahdi configuration
-  lineinfile: dest=$file_dahdi_channel regexp='^{{ item.original }}' line='{{ item.replacement }}'
+  lineinfile: dest='{{ file_dahdi_channel }}' regexp='^{{ item.original }}' line='{{ item.replacement }}'
   with_items:
-    - { original: ';usecallerid', replacement: 'usecallerid=yes' }
-    - { original: ';hidecallerid', replacement: 'hidecallerid=yes' }
-    - { original: ';rxgain', replacement: 'rxgain=0.0' }
-    - { original: ';txgain', replacement: 'txgain=0.0' }
-  tags: dahdi
+    - { original: 'usecallerid', replacement: 'usecallerid=yes' }
+    - { original: 'hidecallerid', replacement: 'hidecallerid=yes' }
+    - { original: 'rxgain', replacement: 'rxgain=0.0' }
+    - { original: 'txgain', replacement: 'txgain=0.0' }
+  tags: dahdi_config
 # Configure the Dahdi card bindings within Asterisk
 - name: update asterisk-dahdi bindings
-  shell: "echo $item >> $file_dahdi_channel"
+  shell: "echo {{ item }} >> {{ file_dahdi_channel }}"
   with_items:
     - '\;FXS Modules'
     - 'group=1'
@@ -43,4 +43,4 @@
     - 'channel=3-4'
   notify:
     - restart asterisk
-  tags: dahdi
+  tags: dahdi_config

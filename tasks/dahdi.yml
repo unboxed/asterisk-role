@@ -2,19 +2,12 @@
 # DAHDI-SPECIFIC BUILD FILE
 
 - name: install dahdi
-  install: url=$url_dahdi dest=$dir_asterisk_source
+  install: url='{{ url_dahdi }}' dest='{{ dir_asterisk_source }}'
   tags: dahdi
   
 # Configure dahdi drivers
 - name: configure dahdi
-  command: /usr/bin/make config chdir=$dir_asterisk_source/$dir_dahdi
-  tags: dahdi
-  
-# Correct the dahdi user
-- name: assign dahdi to $uname
-  command: /bin/sed -i "s/{{ item.original }}/{{ item.replacement }}/g" /etc/udev/rules.d/dahdi.rules
-  with_items:
-    - { original: \"asterisk\", replacement: \"$user_asterisk\" }
+  command: /usr/bin/make config chdir='{{ dir_asterisk_source }}/{{ dir_dahdi }}'
   tags: dahdi
   
 # Load dahdi hardware
