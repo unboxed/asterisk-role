@@ -27,8 +27,8 @@
   command: contrib/scripts/get_mp3_source.sh chdir='{{ dir_asterisk_source }}/{{ dir_asterisk }}'
   tags: asterisk
   
-# Configure asterisk
-- name: configure asterisk
+# Preconfigure Asterisk's build parameters
+- name: configure asterisk build instructions
   command: ./configure chdir='{{ dir_asterisk_source }}/{{ dir_asterisk }}' --sysconfdir='{{ global_config_dir|default('/etc') }}'
   tags: asterisk
   
@@ -58,6 +58,6 @@
   tags: asterisk
   
 # Configure Asterisk
-- name: configure asterisk
+- name: configure asterisk settings
   command: make config chdir='{{ dir_asterisk_source }}/{{ dir_asterisk }}'
   tags: asterisk
