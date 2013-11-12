@@ -3,4 +3,6 @@
 
 - name: install libpri
   install: url='{{ url_libpri }}' dest='{{ dir_asterisk_source }}'
-  tags: libpri
+  tags:
+    - asterisk
+    - libpri
