@@ -2,4 +2,3 @@
 ## Handlers file for manipulating the asterisk role
 - name: restart asterisk
   service: name=asterisk state=restarted
-  when: global_debug == True

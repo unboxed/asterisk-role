@@ -19,7 +19,6 @@ Declaring the following variables in the using playbook will specialise the conf
 
 * **global\_asterisk\_group** will assign Asterisk to the given group, and assign all configuration and logging file read/write/execute access for that group.
 * **global\_config\_dir** will set the filepath of the directory that [Asterisk][] will store its configuration files in. This defaults to */etc/*.
-* **global\_debug** when set to _True_ this will switch on tasks that start and stop Asterisk processes. If not defined, this defaults to false.
 * **global\_log\_dir** will set the filepath of the directory that [Asterisk][] will send its logfiles to. This defaults to */var/log/*
  
 

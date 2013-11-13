@@ -17,7 +17,6 @@
 # Load dahdi hardware
 - name: load dahdi
   service: name=dahdi state=started
-  when: global_debug == True
   tags:
     - asterisk
     - dahdi
