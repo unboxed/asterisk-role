@@ -15,18 +15,24 @@
 - name: install pre-installation libraries
   apt: pkg='{{ item }}' state=latest force=yes
   with_items: '{{ libraries_build }}'
-  tags: build
+  tags: 
+    - asterisk
+    - build
 
 # Create a source directory
 - name: create source directory
   file: path='{{ dir_asterisk_source }}' state=directory force=yes
-  tags: build
+  tags: 
+    - asterisk
+    - build
   
 # Create the logging directory if the default is not being used.
 - name: create logging directory
   file: path='{{ dir_asterisk_log }}' state=directory mode=2775
   when: global_log_dir is defined
-  tags: build
+  tags: 
+    - asterisk
+    - build
 
 ######### Showtime!
 
@@ -43,10 +49,14 @@
   apt: pkg='{{ item }}' state=absent purge=yes
   with_items: '{{ libraries_build }}'
   ignore_errors: yes
-  tags: clean
+  tags:
+    - asterisk
+    - clean
 
 # Cleanup the source directory
 - name: remove source files
   file: path='{{ dir_asterisk_source }}' state=absent force=no
   ignore_errors: yes
-  tags: clean
+  tags: 
+    - asterisk
+    - clean

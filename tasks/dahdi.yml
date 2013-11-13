@@ -3,15 +3,21 @@
 
 - name: install dahdi
   install: url='{{ url_dahdi }}' dest='{{ dir_asterisk_source }}'
-  tags: dahdi
+  tags:
+    - asterisk
+    - dahdi
   
 # Configure dahdi drivers
 - name: configure dahdi
   command: /usr/bin/make config chdir='{{ dir_asterisk_source }}/{{ dir_dahdi }}'
-  tags: dahdi
+  tags:
+    - asterisk
+    - dahdi
   
 # Load dahdi hardware
 - name: load dahdi
   service: name=dahdi state=started
-  tags: dahdi
   when: global_debug == True
+  tags:
+    - asterisk
+    - dahdi
