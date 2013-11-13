@@ -14,3 +14,4 @@
 - name: load dahdi
   service: name=dahdi state=started
   tags: dahdi
+  when: global_debug == True

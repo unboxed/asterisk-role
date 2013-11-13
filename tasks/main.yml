@@ -4,6 +4,13 @@
 
 ######### Pre-game
 
+# Define debug mode
+- name: default debug mode off
+  set_fact: 
+    global_debug: False
+  when: global_debug is not defined
+  tags: asterisk
+
 # Install required libraries
 - name: install pre-installation libraries
   apt: pkg='{{ item }}' state=latest force=yes
