@@ -28,6 +28,29 @@
   notify:
     - restart asterisk
   tags: asterisk
+  
+# Expose the sounds folder to the technicians
+- name: move sound folder
+  command: 'mv /var/lib/asterisk/sounds {{ dir_asterisk_config }}/sounds'
+  tags: asterisk
+  
+- name: create sound file pointer
+  file: >
+    src='{{ dir_asterisk_config }}/sounds'
+    path=/var/lib/asterisk/sounds
+    state=link
+    owner='{{ user_asterisk }}'
+    group='{{ user_asterisk }}'
+  tags: asterisk
+  
+# Create the log link for cdr-csv to quieten ERROR
+- name: create cdr log file
+  file: path='{{ dir_asterisk_log }}/cdr-csv/' state=directory
+  tags: asterisk
+  
+- name: create cdr logfile
+  file: path='{{ dir_asterisk_log }}/cdr-csv/Master.csv' state=present
+  tags: asterisk
 
 # Change ownership of Asterisk files
 - name: change asterisk library permissions
