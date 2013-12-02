@@ -49,7 +49,7 @@
   tags: asterisk
   
 - name: create cdr logfile
-  copy: dest='{{ dir_asterisk_log }}/cdr-csv/Master.csv' src=''
+  command: '/bin/touch {{ dir_asterisk_log}}/cdr-csv/Master.csv'
   tags: asterisk
 
 # Change ownership of Asterisk files
