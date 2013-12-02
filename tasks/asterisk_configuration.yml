@@ -49,7 +49,7 @@
   tags: asterisk
   
 - name: create cdr logfile
-  file: path='{{ dir_asterisk_log }}/cdr-csv/Master.csv' state=present
+  file: path='{{ dir_asterisk_log }}/cdr-csv/Master.csv' state=file
   tags: asterisk
 
 # Change ownership of Asterisk files
