@@ -15,7 +15,8 @@ dir_asterisk_log: "{{ global_log_dir|default('/var/log/') }}/asterisk"
 
 # Dahdi configuration files
 file_dahdi_channel: '{{ dir_asterisk_config }}/chan_dahdi.conf'
-file_dahdi_config: /etc/dahdi/system.conf
+file_dahdi_channels: '/etc/asterisk/dahdi-channels.conf'
+file_dahdi_custom: '{{ dir_asterisk_config }}/chan_dahdi_custom.conf'
 
 # Group to assign ownership of config and log files to
 group_asterisk: "{{ global_asterisk_group|default('asterisk') }}"
