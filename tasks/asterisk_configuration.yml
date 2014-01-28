@@ -74,7 +74,14 @@
   
 # Change ownership of Asterisk configuration and logging files
 - name: change asterisk configuration permissions
-  file: path='{{ item }}' owner='{{ user_asterisk }}' group='{{ group_asterisk }}' state=directory recurse=yes force=yes mode=2775
+  file: 
+    path='{{ item }}'
+    owner='{{ user_asterisk }}'
+    group='{{ group_asterisk }}'
+    state=directory
+    recurse=yes
+    force=yes
+    mode=2775
   with_items:
     - '{{ dir_asterisk_config }}'
     - '{{ dir_asterisk_log }}'

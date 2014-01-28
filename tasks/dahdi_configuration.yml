@@ -39,6 +39,7 @@
     dest='{{ file_dahdi_channel }}'
     line='#include {{ item }}'
     insertbefore='BOF'
+    regexp=''
   with_items:
     - '{{ file_dahdi_custom }}'
     - '{{ file_dahdi_channels }}'
