@@ -33,16 +33,12 @@
   tags:
     - asterisk
     - dahdi_configuration
-    
+
 - name: include the dahdi configuration files
-  lineinfile:
+  template:
     dest='{{ file_dahdi_channel }}'
-    line='#include {{ item }}'
-    insertbefore='BOF'
-    regexp=''
-  with_items:
-    - '{{ file_dahdi_custom }}'
-    - '{{ file_dahdi_channels }}'
+    src='chan_dahdi.conf'
+    owner='{{ user_asterisk }}'
   tags:
     - asterisk
     - dahdi_configuration
