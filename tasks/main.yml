@@ -4,21 +4,6 @@
 
 ######### Pre-game
 
-# Install required libraries
-- name: install pre-installation libraries
-  apt: pkg='{{ item }}' state=latest force=yes
-  with_items: '{{ libraries_build }}'
-  tags: 
-    - asterisk
-    - build
-
-# Create a source directory
-- name: create source directory
-  file: path='{{ dir_asterisk_source }}' state=directory force=yes
-  tags: 
-    - asterisk
-    - build
-  
 # Create the logging directory if the default is not being used.
 - name: create logging directory
   file: path='{{ dir_asterisk_log }}' state=directory mode=2775
@@ -30,26 +15,8 @@
 ######### Showtime!
 
 - include: dahdi.yml
-- include: libpri.yml
+- include: dahdi_configuration.yml
 - include: asterisk.yml
 - include: asterisk_configuration.yml
-- include: dahdi_configuration.yml
   
 ######## Post-game party.
-  
-# Cleanup build packages
-- name: remove build tools
-  apt: pkg='{{ item }}' state=absent purge=yes
-  with_items: '{{ libraries_build }}'
-  ignore_errors: yes
-  tags:
-    - asterisk
-    - clean
-
-# Cleanup the source directory
-- name: remove source files
-  file: path='{{ dir_asterisk_source }}' state=absent force=no
-  ignore_errors: yes
-  tags: 
-    - asterisk
-    - clean

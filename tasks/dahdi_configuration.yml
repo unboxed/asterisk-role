@@ -20,6 +20,7 @@
 # Assign Australia as the default zone
 - name: update dahdi zone data
   lineinfile: 
+    create=yes
     dest='/etc/dahdi/genconf_parameters'
     regexp='(?:^|[ /s#])lc_country(?:[ /s]|$)'
     line='lc_country    au'
@@ -42,3 +43,11 @@
   tags:
     - asterisk
     - dahdi_configuration
+
+# Load dahdi hardware
+- name: load dahdi
+  service: name=dahdi state=started
+  tags:
+    - asterisk
+    - dahdi
+

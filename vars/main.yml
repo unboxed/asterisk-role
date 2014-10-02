@@ -1,51 +1,17 @@
 ---
 # GLOBAL VARIABLES FOR ASTERISK INSTALLATION
 
-# Directories of untarred downloads
-dir_asterisk: asterisk-11.6.0/
-dir_dahdi: dahdi-linux-complete-2.7.0.1+2.7.0.1/
-dir_libpri: libpri-1.4.14/
-
-# source directory name
-dir_asterisk_source: /tmp/src
-
 # asterisk configuration files directory
-dir_asterisk_config: "{{ global_config_dir|default('/etc') }}/asterisk"
+dir_asterisk_config: "/etc/asterisk"
 dir_asterisk_log: "{{ global_log_dir|default('/var/log/') }}/asterisk"
 
 # Dahdi configuration files
 file_dahdi_channel: '{{ dir_asterisk_config }}/chan_dahdi.conf'
-file_dahdi_channels: '/etc/asterisk/dahdi-channels.conf'
+file_dahdi_channels: '{{ dir_asterisk_config }}/dahdi-channels.conf'
 file_dahdi_custom: '{{ dir_asterisk_config }}/chan_dahdi_custom.conf'
 
 # Group to assign ownership of config and log files to
 group_asterisk: "{{ global_asterisk_group|default('asterisk') }}"
-
-# Libraries containing build tools
-libraries_build:
-  - build-essential
-  - subversion
-
-# Libraries required before building
-libraries_pre_installed:
-  - libssl-dev
-  - libncurses5-dev
-  - libnewt-dev
-  - libxml2-dev
-  - libsqlite3-dev
-  - libpq-dev
-  - uuid
-  - uuid-dev
-
-# Filenames of downloaded software
-tar_asterisk: asterisk-11.6.0.tar.gz
-tar_dahdi: dahdi-linux-complete-2.7.0.1+2.7.0.1.tar.gz
-tar_libpri: libpri-1.4.14.tar.gz
-
-# URLs for downloading required software
-url_asterisk: 'http://downloads.digium.com/pub/telephony/asterisk/releases/{{ tar_asterisk }}'
-url_dahdi: 'http://downloads.digium.com/pub/telephony/dahdi-linux-complete/{{ tar_dahdi }}'
-url_libpri: 'http://downloads.asterisk.org/pub/telephony/libpri/{{ tar_libpri }}'
 
 # User name for the asterisk user
 user_asterisk: asterisk

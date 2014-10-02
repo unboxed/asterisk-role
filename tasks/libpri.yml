@@ -1,8 +1,0 @@
----
-# LIBPRI-SPECIFIC BUILD TASKS
-
-- name: install libpri
-  install: url='{{ url_libpri }}' dest='{{ dir_asterisk_source }}'
-  tags:
-    - asterisk
-    - libpri

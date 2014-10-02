@@ -29,20 +29,6 @@
     - restart asterisk
   tags: asterisk
   
-# Expose the sounds folder to the technicians
-- name: move sound folder
-  command: 'mv /var/lib/asterisk/sounds {{ dir_asterisk_config }}/sounds'
-  tags: asterisk
-  
-- name: create sound file pointer
-  file: >
-    src='{{ dir_asterisk_config }}/sounds'
-    path=/var/lib/asterisk/sounds
-    state=link
-    owner='{{ user_asterisk }}'
-    group='{{ user_asterisk }}'
-  tags: asterisk
-  
 # Create the log link for cdr-csv to quieten ERROR
 - name: create cdr log file
   file: path='{{ dir_asterisk_log }}/cdr-csv/' state=directory
@@ -61,6 +47,7 @@
     - /dev/dahdi
     - /var/lib/asterisk
     - /var/spool/asterisk
+    - /var/lib/asterisk/sounds
   tags: asterisk
 
 # Change ownership of Asterisk binaries
@@ -68,8 +55,7 @@
   file: path='{{ item }}' owner='{{ user_asterisk }}' group='{{ user_asterisk }}' force=yes
   with_items:
     - /usr/sbin/asterisk
-    - /usr/include/asterisk.h
-    - /usr/share/man/man8/asterisk.8
+    - /usr/share/man/man8/asterisk.8.gz
   tags: asterisk
   
 # Change ownership of Asterisk configuration and logging files
