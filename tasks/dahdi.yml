@@ -2,10 +2,57 @@
 # DAHDI-SPECIFIC BUILD FILE
 
 # Install dahdi
+# Note that the dahdi installation (as of 14.04.1) fails due to a bug in one
+# of the dahdi-dkms source files which causes compilation to fail. Ignore the
+# error and handle it in later tasks. If the compilation issue is ever
+# resolved then the patch tasks will be ignored (not run).
 - name: install dahdi
   apt: >-
     pkg=asterisk-dahdi
     state=latest
+  register: dahdi_install
+  failed_when: "'Error' in dahdi_install.stderr"
+  ignore_errors: True
+  tags:
+    - asterisk
+    - dahdi
+
+# Get dahdi-dkms version
+- name: dahdi-dkms version
+  shell: 'dpkg-query -W dahdi-dkms | cut -d\: -f2'
+  register: dahdi_dkms_version
+  tags:
+    - asterisk
+    - dahdi
+
+# Update dahdi-dkms Makefile
+# The Makefile normally compiles against the running kernel version but if the
+# kernel is updated during the installation process then the compiled
+# dahdi modules will not be compatible with the new kernel. The Makefile is 
+# updated to use the kernel version specified by DKMS
+- name: dahdi-dkms Makefile
+  lineinfile:
+    dest="/usr/src/dahdi-{{ item }}/Makefile"
+    insertbefore='^ifndef KVERS'
+    line='KVERS:=$(kernelver)'
+    state=present
+  with_items: dahdi_dkms_version.stdout_lines
+  tags:
+    - asterisk
+    - webmin
+
+# Apply patch which allows dahdi-dkms to compile kernel drivers
+- name: dahdi-dkms patch
+  shell: patch -p0 -d / < roles/asterisk/files/patch.diff 
+  when: dahdi_install|failed
+  tags:
+    - asterisk
+    - dahdi
+
+# Re-run compilation of dahdi-dkms after the patch is applied
+- name: dahdi-dkms compile
+  shell: /var/lib/dpkg/info/dahdi-dkms.postinst configure
+  when: dahdi_install|failed
   tags:
     - asterisk
     - dahdi
