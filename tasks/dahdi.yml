@@ -28,22 +28,54 @@
 # Update dahdi-dkms Makefile
 # The Makefile normally compiles against the running kernel version but if the
 # kernel is updated during the installation process then the compiled
-# dahdi modules will not be compatible with the new kernel. The Makefile is 
+# dahdi modules will not be compatible with the new kernel. The Makefile is
 # updated to use the kernel version specified by DKMS
 - name: dahdi-dkms Makefile
   lineinfile:
-    dest="/usr/src/dahdi-{{ item }}/Makefile"
-    insertbefore='^ifndef KVERS'
-    line='KVERS:=$(kernelver)'
+    dest=/usr/src/dahdi-{{ dahdi_dkms_version.stdout }}/Makefile
+    insertbefore={{ item.insertbefore }}
+    line={{ item.line }}
     state=present
-  with_items: dahdi_dkms_version.stdout_lines
+  with_items:
+    - { insertbefore: '^"ifndef KVERS"', line: 'KVERS:=$(kernelver)' }
+  when: dahdi_install|failed
   tags:
     - asterisk
-    - webmin
+    - dahdi
 
 # Apply patch which allows dahdi-dkms to compile kernel drivers
 - name: dahdi-dkms patch
   shell: patch -p0 -d / < roles/asterisk/files/patch.diff 
+  when: dahdi_install|failed
+  tags:
+    - asterisk
+    - dahdi
+
+# Copy the hardware echo canceler firmware source package for the dahdi drivers
+# into the /tmp directory allowing offline installation
+- name: copy firmware source
+  copy: >-
+    src='../files/{{ item }}'
+    dest='/tmp/{{ item }}'
+  with_items:
+    - 'dahdi-fwload-vpmadt032-1.25.0.tar.gz'
+  when: dahdi_install|failed
+  tags:
+    - asterisk
+    - dahdi
+
+# Update dahdi-dkms firmware Makefile to dowload the firmware source 
+# package from the /tmp directory
+- name: dahdi-dkms-firmware Makefile
+  lineinfile: 
+    dest=/usr/src/dahdi-{{ dahdi_dkms_version.stdout }}/drivers/dahdi/firmware/Makefile
+    regexp={{ item.regexp }}
+    line={{ item.line }}
+    state=present
+  with_items:
+    - { regexp: '^FIRMWARE_URL:=http://downloads.digium.com/pub/telephony/firmware/releases', line: 'FIRMWARE_URL:=file:///tmp' }   
+    - { regexp: '^DOWNLOAD=wget', line: 'DOWNLOAD="curl -O"' }
+    - { regexp: '^WGET=wget', line: 'WGET="curl -O"' }
   when: dahdi_install|failed
   tags:
     - asterisk
