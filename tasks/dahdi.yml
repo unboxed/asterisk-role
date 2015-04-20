@@ -47,6 +47,7 @@
 - name: dahdi-dkms patch
   shell: patch -p0 -d / < roles/asterisk/files/patch.diff 
   when: dahdi_install|failed
+  ignore_errors: True
   tags:
     - asterisk
     - dahdi
